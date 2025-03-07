@@ -5,6 +5,8 @@ void mouseReleased() {
     gameClicks();
   } else if (mode == GAMEOVER) {
     gameOverClicks();
-  } 
+  } else if (mode == GAMEWIN) {
+  gameWinClicks();
+  }
   
 }

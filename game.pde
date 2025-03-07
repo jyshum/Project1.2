@@ -2,47 +2,85 @@ void game() {
 
   background(gameBackground);
   
+  //spawning--------------------------------------------------------------------------------------------------------------------
+  for (int i = 0; i < 20; i++) {
+        plankton(planktonX[i], planktonY[i],transparency[i]);
+    }
+    
+    // Check if all plankton are eaten
+    checkPlanktonEaten();
+  
   pushMatrix();
   noStroke();
   circle(player1X, player1Y, player1Size);
   circle(player2X, player2Y, player2Size);
   popMatrix();
   
-  player1Fish(player1X, player1Y, player1Angle);
+  //if (dist(player1X,player1Y,player2X,player2Y) < player1Size/2 +player2Size/2) {
+  
+  //}
+  
+  //drawing players--------------------------------------------------------------------------------------------------------------------
   
   player2Fish(player2X, player2Y, player2Angle);
   
+//eating collision--------------------------------------------------------------------------------------------------------------------
+for (int i = 0; i < planktonX.length; i++) {
+    if (dist(player1X, player1Y, planktonX[i], planktonY[i]) < 30) {
+        transparency[i] = 0; // Only this specific plankton disappears
+    }
+        if (dist(player2X, player2Y, planktonX[i], planktonY[i]) < 30) {
+        transparency[i] = 0; // Only this specific plankton disappears
+    }
+}
+
+  //drawing bottom sea--------------------------------------------------------------------------------------------------------------------
+  fill(sand);
+  rect(0,500,1000,150);
 
   
-  //movement system
+  //movement system--------------------------------------------------------------------------------------------------------------------
   if (wkey == true) {
-    player1X = player1X + 3*cos(radians(player1Angle));
-    player1Y = player1Y + 3*sin(radians(player1Angle));
+    player1X = player1X + 2*cos(radians(player1Angle));
+    player1Y = player1Y + 2*sin(radians(player1Angle));
   }
   if (skey == true) ;
   if (akey == true) player1Angle = player1Angle - 5;
   if (dkey == true) player1Angle = player1Angle + 5;
   
   if (upkey == true) {
-    player2X = player2X + 3*cos(radians(player2Angle));
-    player2Y = player2Y + 3*sin(radians(player2Angle));
+    player2X = player2X + 2*cos(radians(player2Angle));
+    player2Y = player2Y + 2*sin(radians(player2Angle));
   }
   if (downkey == true) ;
   if (leftkey == true) player2Angle = player2Angle - 5;
   if (rightkey == true) player2Angle = player2Angle + 5;
   
- //coral walls
+ //coral X walls--------------------------------------------------------------------------------------------------------------------
+ if (player1X <= player1Size/2) {
+    player1X = player1Size/2;
+  }
+  if (player1X >= width-player1Size/2) {
+    player1X = width-player1Size/2;
+  }
+  if (player2X <= player2Size/2) {
+    player2X = player2Size/2;
+  }
+  if (player2X >= width-player2Size/2) {
+    player2X = width-player2Size/2;
+  }
+  //coral Y walls--------------------------------------------------------------------------------------------------------------------
   if (player1Y <= player1Size/2) {
     player1Y = player1Size/2;
   }
-  if (player1Y >= height-player1Size/2) {
-    player1Y = height-player1Size/2;
+  if (player1Y >= 500-player1Size/2) {
+    player1Y = 500-player1Size/2;
   }
   if (player2Y <= player2Size/2) {
     player2Y = player2Size/2;
   }
-  if (player2Y >= height-player2Size/2) {
-    player2Y = height-player2Size/2;
+  if (player2Y >= 500-player2Size/2) {
+    player2Y = 500-player2Size/2;
   }
   
 }
@@ -51,12 +89,51 @@ void gameClicks() {
 
 }
 
+void checkPlanktonEaten() {
+    boolean allPlanktonEaten = true;
+
+    // Check if all plankton's transparency is 0
+    for (int i = 0; i < 20; i++) {
+        if (transparency[i] != 0) {
+            allPlanktonEaten = false;
+            break; // Exit early if one plankton is still visible
+        }
+    }
+
+    // If all plankton are eaten (transparency 0), switch to game over mode
+    if (allPlanktonEaten) {
+       mode = TRANSITION;
+       TRANSITIONMODE = GAMEWIN;
+       transitionCounter = 0;
+       resetPlanktonPlayers(); // Reset plankton positions and transparency
+    }
+}
+
+void resetPlanktonPlayers() {
+    // Reset plankton positions and transparency
+    for (int i = 0; i < 20; i++) {
+        planktonX[i] = random(width);  // Reset position to random place
+        planktonY[i] = random(height);
+        transparency[i] = 255;  // Reset transparency to 255 (fully visible)
+        
+        player1X = 100;
+        player1Y = height/2-200;
+        player1Angle = 45;
+        
+        player2X = 100;
+        player2Y = height/2-100;
+        player2Angle = 45;
+    }
+}
+
+
 void player1Fish(float x, float y, float a) {
 
   pushMatrix();
   translate(x, y);
   scale(0.5);
   rotate(radians(a));
+  fill(player1);
   fishdorsal(0, 0);
   fishtail(0, 0);
   fishbody(0, 0);
@@ -75,6 +152,7 @@ void player2Fish(float x, float y, float a) {
   translate(x, y);
   scale(0.5);
   rotate(radians(a));
+  fill(player2);
   fishdorsal(0, 0);
   fishtail(0, 0);
   fishbody(0, 0);
@@ -158,4 +236,15 @@ void fishgill(float x, float y) {
   line(0, -8, 0, 8);
   ellipse(-5, 0, 10, 10);
   popMatrix();
+}
+
+void plankton(float x, float y, int transparency) {
+
+  pushMatrix();
+  translate(x,y);
+  noStroke();
+  fill(plankton, transparency);
+  circle(0,0,15);
+  popMatrix();
+
 }
