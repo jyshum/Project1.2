@@ -1,7 +1,7 @@
 void game() {
 
   background(gameBackground);
-  
+  textFade = 0;
   //spawning--------------------------------------------------------------------------------------------------------------------
   for (int i = 0; i < 20; i++) {
         plankton(planktonX[i], planktonY[i],transparency[i]);
@@ -21,6 +21,7 @@ void game() {
   //}
   
   //drawing players--------------------------------------------------------------------------------------------------------------------
+  player1Fish(player1X, player1Y, player1Angle);
   
   player2Fish(player2X, player2Y, player2Angle);
   

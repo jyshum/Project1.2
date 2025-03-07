@@ -28,6 +28,9 @@ boolean wkey, skey, akey, dkey, ekey, upkey, downkey, leftkey, rightkey, ctrlkey
 
 //other-variables
 float f;
+float textFade;
+int counter;
+PFont Fondamento;
 int[] transparency = new int[20]; // ✅ This stores transparency for EACH plankton
 int planktonCount;
 float[] planktonX = new float[20];
@@ -42,6 +45,7 @@ color plankton = #5ACE5E;
 color player1 = #E3995C;
 color player2 = #BF6B3A;
 color sand = #CBA97F;
+color white = #FFFFFF;
 
 void setup() {
  size(1000,600);
@@ -62,6 +66,7 @@ void setup() {
   
   //other Starts
   FishEating = loadImage("fish1-removebg-preview.png");
+  Fondamento = createFont("Fondamento-Italic", 20);
   
   for (int i = 0; i < 20; i++) {
     planktonX[i] = random(20,980);
